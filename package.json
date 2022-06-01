@@ -4,15 +4,17 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postinstall": "keystone postinstall",
     "build": "next build && next export",
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "12.1.6",
-    "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "@keystone-6/core": "^1.1.1",
+    "next": "^12.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@types/node": "17.0.36",
