@@ -20,7 +20,7 @@ const Route: NextPage = (context: any) => {
       <main>
         {context.blocks && context.blocks.map((block: any, index: number) => {
           const Block = dynamic(
-            () => import(`@/components/blocks/${block.type}/`),
+            () => import(`@/blocks/${block.type}/`),
             {
               loading: () => <p>...</p>,
               ssr: true
