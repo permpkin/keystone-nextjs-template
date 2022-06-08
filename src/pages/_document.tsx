@@ -1,11 +1,23 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import type { WebSite } from 'schema-dts';
+import { Schema } from '@/utils/Schema'
 
 export default function Document() {
   return (
     <Html>
       <Head>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
-        <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" key="main-font" />
+        <link rel="icon" href="/favicon.ico" key="icon" />
+        <link rel="canonical" href={process.env.SITE_URL}  key="canonical"/>
+        <meta name="description" content={process.env.SITE_DESCRIPTION} key="description"/>
+        <meta property="og:title" content={process.env.SITE_TITLE} key="og-title" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: Schema<WebSite>({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: process.env.SITE_TITLE
+          })
+        }} key="ld-title" />
       </Head>
       <body>
         <Main />

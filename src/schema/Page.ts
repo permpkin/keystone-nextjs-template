@@ -1,13 +1,11 @@
 import { list } from '@keystone-6/core';
-
 import {
   text,
   relationship,
-  timestamp,
-  select,
+  json,
 } from '@keystone-6/core/fields';
 
-import { document } from '@keystone-6/fields-document';
+import slug from 'limax';
 
 export const Page = list({
   fields: {
@@ -15,48 +13,70 @@ export const Page = list({
       isIndexed: 'unique',
       validation: { isRequired: true }
     }),
-    content: document({
-      formatting: true,
-      layouts: [
-        [1, 1],
-        [1, 1, 1],
-        [2, 1],
-        [1, 2],
-        [1, 2, 1],
-      ],
-      links: true,
-      dividers: true,
-    }),
-    status: select({
-      options: [
-        { label: 'Published', value: 'published' },
-        { label: 'Draft', value: 'draft' },
-      ],
-      defaultValue: 'draft',
+    description: text({
       ui: {
-        displayMode: 'segmented-control',
-      },
-    }),
-    publishDate: timestamp(),
-    author: relationship({
-      ref: 'User'
-    }),
-    categories: relationship({
-      ref: 'Category',
-      many: true
-    }),
-    tags: relationship({
-      ref: 'Tag',
-      many: true
+        displayMode: 'textarea'
+      }
     }),
     path: relationship({
-      ref: 'Route',
-      many: true
+      ref: 'Route.page',
+      ui: {
+        hideCreate: true,
+        displayMode: 'cards',
+        cardFields: ["path"],
+        linkToItem: false,
+        inlineEdit: { fields: ["path"] },
+        removeMode: 'none'
+      }
+    }),
+    parent: relationship({
+      ref: 'Page',
+      ui: {
+        hideCreate: true,
+        displayMode: 'select'
+      }
+    }),
+    blocks: json({
+      defaultValue: [
+        { type: 'Example', props: {} }
+      ]
     })
   },
   ui: {
     listView: {
-      initialColumns: ['title', 'status', 'author', 'categories', 'tags']
+      initialColumns: ['title', 'description']
+    }
+  },
+  hooks: {
+    resolveInput: ({ listKey, resolvedData }) => {
+      const { title } = resolvedData;
+      if (title) {
+        return {
+          ...resolvedData,
+          path: {
+            // create paired route.
+            create: {
+              path: `/${slug(title)}`,
+              typeRef: listKey,
+              ref: resolvedData.id
+            }
+          }
+        }
+      }
+      // We always return resolvedData from the resolveInput hook
+      return resolvedData;
+    },
+    afterOperation: async ({ context, operation, originalItem }) => {
+      switch (operation) {
+        case 'delete':
+          // delete paired route object (if set).
+          if (originalItem.pathId !== undefined) {
+            await context.db.Route.deleteOne({
+              where: { id: `${originalItem.pathId}` },
+            });
+          }
+        break;
+      }
     }
   }
 });

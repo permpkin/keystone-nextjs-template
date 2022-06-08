@@ -4,7 +4,9 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   env: {
-    customKey: 'my-value',
+    SITE_URL: 'example.com',
+    SITE_TITLE: 'Example Website',
+    SITE_DESCRIPTION: 'This is my example website!'
   }
 }
 

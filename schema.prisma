@@ -11,135 +11,30 @@ generator client {
   output   = "node_modules/.prisma/client"
 }
 
-model Setting {
-  id          String  @id @default(cuid())
-  key         String  @unique @default("")
-  description String  @default("")
-  value       String? @default("{}")
-}
-
 model User {
-  id                String    @id @default(cuid())
-  name              String    @default("")
-  email             String    @unique @default("")
-  role              UserRole? @relation("User_role", fields: [roleId], references: [id])
-  roleId            String?   @map("role")
-  password          String
-  from_Page_author  Page[]    @relation("Page_author")
-  from_Order_user   Order[]   @relation("Order_user")
-  from_Payment_user Payment[] @relation("Payment_user")
-
-  @@index([roleId])
-}
-
-model UserRole {
-  id             String @id @default(cuid())
-  name           String @unique @default("")
-  from_User_role User[] @relation("User_role")
+  id       String @id @default(cuid())
+  name     String @default("")
+  email    String @unique @default("")
+  password String
 }
 
 model Route {
-  id                String    @id @default(cuid())
-  path              String    @unique @default("")
-  type              String    @default("200")
-  from_Page_path    Page[]    @relation("Page_path")
-  from_Product_path Product[] @relation("Product_path")
-}
-
-model UserCart {
-  id           String    @id @default(cuid())
-  session      String    @unique @default("")
-  lastActivity DateTime?
-  products     Product[] @relation("UserCart_products")
-  coupons      Coupon[]  @relation("UserCart_coupons")
-}
-
-model Tag {
-  id                String    @id @default(cuid())
-  name              String    @unique @default("")
-  from_Page_tags    Page[]    @relation("Page_tags")
-  from_Product_tags Product[] @relation("Product_tags")
-}
-
-model Category {
-  id                      String    @id @default(cuid())
-  name                    String    @unique @default("")
-  from_Page_categories    Page[]    @relation("Page_categories")
-  from_Product_categories Product[] @relation("Product_categories")
+  id      String @id @default(cuid())
+  path    String @unique @default("")
+  typeRef String
+  page    Page?  @relation("Page_path")
 }
 
 model Page {
-  id          String     @id @default(cuid())
-  title       String     @unique @default("")
-  content     String     @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  status      String?    @default("draft")
-  publishDate DateTime?
-  author      User?      @relation("Page_author", fields: [authorId], references: [id])
-  authorId    String?    @map("author")
-  categories  Category[] @relation("Page_categories")
-  tags        Tag[]      @relation("Page_tags")
-  path        Route[]    @relation("Page_path")
+  id               String  @id @default(cuid())
+  title            String  @unique @default("")
+  description      String  @default("")
+  path             Route?  @relation("Page_path", fields: [pathId], references: [id])
+  pathId           String? @unique @map("path")
+  parent           Page?   @relation("Page_parent", fields: [parentId], references: [id])
+  parentId         String? @map("parent")
+  blocks           String? @default("[{\"type\":\"Example\",\"props\":{}}]")
+  from_Page_parent Page[]  @relation("Page_parent")
 
-  @@index([authorId])
-}
-
-model Product {
-  id                     String     @id @default(cuid())
-  name                   String     @unique @default("")
-  featureImage_filesize  Int?
-  featureImage_extension String?
-  featureImage_width     Int?
-  featureImage_height    Int?
-  featureImage_mode      String?
-  featureImage_id        String?
-  price                  Float
-  stock                  Int
-  childOf                Product?   @relation("Product_childOf", fields: [childOfId], references: [id])
-  childOfId              String?    @map("childOf")
-  categories             Category[] @relation("Product_categories")
-  tags                   Tag[]      @relation("Product_tags")
-  path                   Route[]    @relation("Product_path")
-  from_UserCart_products UserCart[] @relation("UserCart_products")
-  from_Product_childOf   Product[]  @relation("Product_childOf")
-  from_Order_products    Order[]    @relation("Order_products")
-
-  @@index([childOfId])
-}
-
-model Order {
-  id                 String    @id @default(cuid())
-  orderNo            String    @unique @default("")
-  status             String?   @default("pending-payment")
-  user               User?     @relation("Order_user", fields: [userId], references: [id])
-  userId             String?   @map("user")
-  products           Product[] @relation("Order_products")
-  coupons            Coupon[]  @relation("Order_coupons")
-  total              Int
-  orderMeta          String?   @default("{}")
-  from_Payment_order Payment[] @relation("Payment_order")
-
-  @@index([userId])
-}
-
-model Payment {
-  id          String  @id @default(cuid())
-  amount      Int
-  user        User?   @relation("Payment_user", fields: [userId], references: [id])
-  userId      String? @map("user")
-  order       Order?  @relation("Payment_order", fields: [orderId], references: [id])
-  orderId     String? @map("order")
-  paymentMeta String? @default("{}")
-
-  @@index([userId])
-  @@index([orderId])
-}
-
-model Coupon {
-  id                    String     @id @default(cuid())
-  code                  String     @unique @default("")
-  validFrom             DateTime?
-  validTo               DateTime?
-  rules                 String?    @default("{}")
-  from_UserCart_coupons UserCart[] @relation("UserCart_coupons")
-  from_Order_coupons    Order[]    @relation("Order_coupons")
+  @@index([parentId])
 }

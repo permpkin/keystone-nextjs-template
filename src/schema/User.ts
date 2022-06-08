@@ -2,8 +2,7 @@ import { list } from '@keystone-6/core';
 
 import {
   text,
-  password,
-  relationship
+  password
 } from '@keystone-6/core/fields';
 
 export const User = list({
@@ -14,14 +13,11 @@ export const User = list({
       isIndexed: 'unique',
       isFilterable: true,
     }),
-    role: relationship({
-      ref: 'UserRole'
-    }),
     password: password({ validation: { isRequired: true } })
   },
   ui: {
     listView: {
-      initialColumns: ['name', 'role', 'email'],
+      initialColumns: ['name', 'email'],
     },
   },
 });
