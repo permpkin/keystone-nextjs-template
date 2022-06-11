@@ -95,6 +95,7 @@ input UserCreateInput {
 
 type Route {
   id: ID!
+  prefix: String
   path: String
   typeRef: String
   page: Page
@@ -110,6 +111,7 @@ input RouteWhereInput {
   OR: [RouteWhereInput!]
   NOT: [RouteWhereInput!]
   id: IDFilter
+  prefix: StringFilter
   path: StringFilter
   typeRef: StringFilter
   page: PageWhereInput
@@ -117,11 +119,13 @@ input RouteWhereInput {
 
 input RouteOrderByInput {
   id: OrderDirection
+  prefix: OrderDirection
   path: OrderDirection
   typeRef: OrderDirection
 }
 
 input RouteUpdateInput {
+  prefix: String
   path: String
   typeRef: String
   page: PageRelateToOneForUpdateInput
@@ -139,6 +143,7 @@ input RouteUpdateArgs {
 }
 
 input RouteCreateInput {
+  prefix: String
   path: String
   typeRef: String
   page: PageRelateToOneForCreateInput
@@ -152,9 +157,8 @@ input PageRelateToOneForCreateInput {
 type Page {
   id: ID!
   title: String
-  description: String
   path: Route
-  parent: Page
+  description: String
   blocks: JSON
 }
 
@@ -169,9 +173,8 @@ input PageWhereInput {
   NOT: [PageWhereInput!]
   id: IDFilter
   title: StringFilter
-  description: StringFilter
   path: RouteWhereInput
-  parent: PageWhereInput
+  description: StringFilter
 }
 
 input PageOrderByInput {
@@ -182,9 +185,8 @@ input PageOrderByInput {
 
 input PageUpdateInput {
   title: String
-  description: String
   path: RouteRelateToOneForUpdateInput
-  parent: PageRelateToOneForUpdateInput
+  description: String
   blocks: JSON
 }
 
@@ -201,9 +203,8 @@ input PageUpdateArgs {
 
 input PageCreateInput {
   title: String
-  description: String
   path: RouteRelateToOneForCreateInput
-  parent: PageRelateToOneForCreateInput
+  description: String
   blocks: JSON
 }
 

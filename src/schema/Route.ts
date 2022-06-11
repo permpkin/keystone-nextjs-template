@@ -8,6 +8,7 @@ import {
 
 export const Route = list({
   fields: {
+    prefix: text(),
     path: text({
       isIndexed: 'unique',
       validation: { isRequired: true }
@@ -20,11 +21,11 @@ export const Route = list({
     }),
     page: relationship({
       ref: 'Page.path'
-    }),
+    })
   },
   ui: {
     hideCreate: true,
-    hideDelete: true,
+    // hideDelete: true,
     // isHidden: true,
     listView: {
       initialColumns: ['page', 'path']

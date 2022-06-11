@@ -20,21 +20,17 @@ model User {
 
 model Route {
   id      String @id @default(cuid())
+  prefix  String @default("")
   path    String @unique @default("")
   typeRef String
   page    Page?  @relation("Page_path")
 }
 
 model Page {
-  id               String  @id @default(cuid())
-  title            String  @unique @default("")
-  description      String  @default("")
-  path             Route?  @relation("Page_path", fields: [pathId], references: [id])
-  pathId           String? @unique @map("path")
-  parent           Page?   @relation("Page_parent", fields: [parentId], references: [id])
-  parentId         String? @map("parent")
-  blocks           String? @default("[{\"type\":\"Example\",\"props\":{}}]")
-  from_Page_parent Page[]  @relation("Page_parent")
-
-  @@index([parentId])
+  id          String  @id @default(cuid())
+  title       String  @unique @default("")
+  path        Route?  @relation("Page_path", fields: [pathId], references: [id])
+  pathId      String? @unique @map("path")
+  description String  @default("")
+  blocks      String? @default("[{\"type\":\"Example\",\"props\":{}}]")
 }

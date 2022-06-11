@@ -1,3 +1,4 @@
+// import { slug } from '../admin/fields/slug';
 import { list } from '@keystone-6/core';
 import {
   text,
@@ -5,7 +6,9 @@ import {
   json,
 } from '@keystone-6/core/fields';
 
-import slug from 'limax';
+// import { slug } from "@/admin/fields/slug"
+
+import toSlug from 'limax';
 
 export const Page = list({
   fields: {
@@ -13,33 +16,33 @@ export const Page = list({
       isIndexed: 'unique',
       validation: { isRequired: true }
     }),
+    path: relationship({
+      ref: 'Route.page',
+      ui: {
+        views: require.resolve('../admin/fields/slug/index.tsx'),
+        createView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'read' },
+        itemView: { fieldMode: 'edit' },
+      },
+      // graphql: {
+      //   omit: ['read', 'create', 'update'],
+      // }
+    }),
     description: text({
       ui: {
         displayMode: 'textarea'
       }
     }),
-    path: relationship({
-      ref: 'Route.page',
-      ui: {
-        hideCreate: true,
-        displayMode: 'cards',
-        cardFields: ["path"],
-        linkToItem: false,
-        inlineEdit: { fields: ["path"] },
-        removeMode: 'none'
-      }
-    }),
-    parent: relationship({
-      ref: 'Page',
-      ui: {
-        hideCreate: true,
-        displayMode: 'select'
-      }
-    }),
     blocks: json({
       defaultValue: [
         { type: 'Example', props: {} }
-      ]
+      ],
+      ui: {
+        views: require.resolve('../admin/fields/blocks/index.tsx'),
+        createView: { fieldMode: 'hidden' },
+        listView: { fieldMode: 'hidden' },
+        itemView: { fieldMode: 'edit' },
+      },
     })
   },
   ui: {
@@ -48,15 +51,21 @@ export const Page = list({
     }
   },
   hooks: {
-    resolveInput: ({ listKey, resolvedData }) => {
+    resolveInput: ({
+      listKey,
+      resolvedData,
+      item,
+      operation
+    }) => {
       const { title } = resolvedData;
-      if (title) {
+      if (operation == "create") {
         return {
           ...resolvedData,
           path: {
             // create paired route.
             create: {
-              path: `/${slug(title)}`,
+              // TODO: auto affix "-<int>" on duplicate
+              path: `/${toSlug(title)}`,
               typeRef: listKey,
               ref: resolvedData.id
             }
