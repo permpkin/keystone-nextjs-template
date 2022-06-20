@@ -14,10 +14,5 @@ export const User = list({
       isFilterable: true,
     }),
     password: password({ validation: { isRequired: true } })
-  },
-  ui: {
-    listView: {
-      initialColumns: ['name', 'email'],
-    },
-  },
+  }
 });

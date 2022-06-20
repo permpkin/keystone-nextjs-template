@@ -3,10 +3,18 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  env: {
-    SITE_URL: 'example.com',
-    SITE_TITLE: 'Example Website',
-    SITE_DESCRIPTION: 'This is my example website!'
+  async headers() {
+    return [
+      {
+        source: '/admin',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow',
+          }
+        ]
+      }
+    ]
   }
 }
 

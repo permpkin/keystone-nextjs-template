@@ -1,5 +1,5 @@
 {
-  "name": "keystone-website",
+  "name": "tensor-cms",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,7 @@
     "postinstall": "keystone postinstall",
     "build": "next build && next export",
     "postbuild": "next-sitemap",
+    "studio": "keystone prisma studio",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,16 +15,18 @@
     "@keystone-6/auth": "^2.0.0",
     "@keystone-6/core": "^1.1.1",
     "@keystone-6/fields-document": "^2.0.1",
-    "limax": "^3.0.0",
     "next": "^12.1.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-sortablejs": "^6.1.4",
+    "sortablejs": "^1.15.0"
   },
   "devDependencies": {
     "@emotion/css": "^11.9.0",
     "@types/node": "17.0.36",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
+    "@types/sortablejs": "^1.13.0",
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",
     "next-sitemap": "^2.5.28",

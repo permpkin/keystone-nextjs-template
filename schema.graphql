@@ -93,73 +93,15 @@ input UserCreateInput {
   password: String
 }
 
-type Route {
-  id: ID!
-  prefix: String
-  path: String
-  typeRef: String
-  page: Page
-}
-
-input RouteWhereUniqueInput {
-  id: ID
-  path: String
-}
-
-input RouteWhereInput {
-  AND: [RouteWhereInput!]
-  OR: [RouteWhereInput!]
-  NOT: [RouteWhereInput!]
-  id: IDFilter
-  prefix: StringFilter
-  path: StringFilter
-  typeRef: StringFilter
-  page: PageWhereInput
-}
-
-input RouteOrderByInput {
-  id: OrderDirection
-  prefix: OrderDirection
-  path: OrderDirection
-  typeRef: OrderDirection
-}
-
-input RouteUpdateInput {
-  prefix: String
-  path: String
-  typeRef: String
-  page: PageRelateToOneForUpdateInput
-}
-
-input PageRelateToOneForUpdateInput {
-  create: PageCreateInput
-  connect: PageWhereUniqueInput
-  disconnect: Boolean
-}
-
-input RouteUpdateArgs {
-  where: RouteWhereUniqueInput!
-  data: RouteUpdateInput!
-}
-
-input RouteCreateInput {
-  prefix: String
-  path: String
-  typeRef: String
-  page: PageRelateToOneForCreateInput
-}
-
-input PageRelateToOneForCreateInput {
-  create: PageCreateInput
-  connect: PageWhereUniqueInput
-}
-
 type Page {
   id: ID!
   title: String
-  path: Route
+  path: String
+  slug: String
   description: String
+  parent: Page
   blocks: JSON
+  isHome: Boolean
 }
 
 input PageWhereUniqueInput {
@@ -173,26 +115,38 @@ input PageWhereInput {
   NOT: [PageWhereInput!]
   id: IDFilter
   title: StringFilter
-  path: RouteWhereInput
+  path: StringFilter
+  slug: StringFilter
   description: StringFilter
+  parent: PageWhereInput
+  isHome: BooleanFilter
+}
+
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
 }
 
 input PageOrderByInput {
   id: OrderDirection
   title: OrderDirection
+  path: OrderDirection
   description: OrderDirection
 }
 
 input PageUpdateInput {
   title: String
-  path: RouteRelateToOneForUpdateInput
+  path: String
+  slug: String
   description: String
+  parent: PageRelateToOneForUpdateInput
   blocks: JSON
+  isHome: Boolean
 }
 
-input RouteRelateToOneForUpdateInput {
-  create: RouteCreateInput
-  connect: RouteWhereUniqueInput
+input PageRelateToOneForUpdateInput {
+  create: PageCreateInput
+  connect: PageWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -203,14 +157,61 @@ input PageUpdateArgs {
 
 input PageCreateInput {
   title: String
-  path: RouteRelateToOneForCreateInput
+  path: String
+  slug: String
   description: String
+  parent: PageRelateToOneForCreateInput
   blocks: JSON
+  isHome: Boolean
 }
 
-input RouteRelateToOneForCreateInput {
-  create: RouteCreateInput
-  connect: RouteWhereUniqueInput
+input PageRelateToOneForCreateInput {
+  create: PageCreateInput
+  connect: PageWhereUniqueInput
+}
+
+type Meta {
+  id: ID!
+  key: String
+  autoload: Boolean
+  data: JSON
+}
+
+input MetaWhereUniqueInput {
+  id: ID
+  key: String
+}
+
+input MetaWhereInput {
+  AND: [MetaWhereInput!]
+  OR: [MetaWhereInput!]
+  NOT: [MetaWhereInput!]
+  id: IDFilter
+  key: StringFilter
+  autoload: BooleanFilter
+}
+
+input MetaOrderByInput {
+  id: OrderDirection
+  key: OrderDirection
+  autoload: OrderDirection
+}
+
+input MetaUpdateInput {
+  key: String
+  autoload: Boolean
+  data: JSON
+}
+
+input MetaUpdateArgs {
+  where: MetaWhereUniqueInput!
+  data: MetaUpdateInput!
+}
+
+input MetaCreateInput {
+  key: String
+  autoload: Boolean
+  data: JSON
 }
 
 """
@@ -228,18 +229,18 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
-  createRoute(data: RouteCreateInput!): Route
-  createRoutes(data: [RouteCreateInput!]!): [Route]
-  updateRoute(where: RouteWhereUniqueInput!, data: RouteUpdateInput!): Route
-  updateRoutes(data: [RouteUpdateArgs!]!): [Route]
-  deleteRoute(where: RouteWhereUniqueInput!): Route
-  deleteRoutes(where: [RouteWhereUniqueInput!]!): [Route]
   createPage(data: PageCreateInput!): Page
   createPages(data: [PageCreateInput!]!): [Page]
   updatePage(where: PageWhereUniqueInput!, data: PageUpdateInput!): Page
   updatePages(data: [PageUpdateArgs!]!): [Page]
   deletePage(where: PageWhereUniqueInput!): Page
   deletePages(where: [PageWhereUniqueInput!]!): [Page]
+  createMeta(data: MetaCreateInput!): Meta
+  createMetas(data: [MetaCreateInput!]!): [Meta]
+  updateMeta(where: MetaWhereUniqueInput!, data: MetaUpdateInput!): Meta
+  updateMetas(data: [MetaUpdateArgs!]!): [Meta]
+  deleteMeta(where: MetaWhereUniqueInput!): Meta
+  deleteMetas(where: [MetaWhereUniqueInput!]!): [Meta]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -278,14 +279,6 @@ type Query {
   ): [User!]
   user(where: UserWhereUniqueInput!): User
   usersCount(where: UserWhereInput! = {}): Int
-  routes(
-    where: RouteWhereInput! = {}
-    orderBy: [RouteOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Route!]
-  route(where: RouteWhereUniqueInput!): Route
-  routesCount(where: RouteWhereInput! = {}): Int
   pages(
     where: PageWhereInput! = {}
     orderBy: [PageOrderByInput!]! = []
@@ -294,6 +287,14 @@ type Query {
   ): [Page!]
   page(where: PageWhereUniqueInput!): Page
   pagesCount(where: PageWhereInput! = {}): Int
+  metas(
+    where: MetaWhereInput! = {}
+    orderBy: [MetaOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Meta!]
+  meta(where: MetaWhereUniqueInput!): Meta
+  metasCount(where: MetaWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

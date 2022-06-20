@@ -1,12 +1,12 @@
 // import { GetStaticProps } from "next";
 
 // import { query } from '.keystone/api';
+import { GetServerSideProps } from 'next';
 
 import style from "./style.module.scss"
 
-// export default function Header({ routes }: any) {
-export default function Header() {
-  const routes = [{path:"/"},{path:"/test-page"}]
+export default function Header({ routes }:{ routes?: { path: string }[] }) {
+
   return (
     <header className={style.header}>
       HEADER_MENU
@@ -25,4 +25,18 @@ export default function Header() {
       </nav>
     </header>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+
+  // const routes = await query.Page.findMany({
+  //   query: `title path { prefix path }`
+  // });
+
+  return {
+    props: {
+      routes: []
+    }
+  }
+
 }

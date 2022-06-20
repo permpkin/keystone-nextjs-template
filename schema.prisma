@@ -18,19 +18,26 @@ model User {
   password String
 }
 
-model Route {
-  id      String @id @default(cuid())
-  prefix  String @default("")
-  path    String @unique @default("")
-  typeRef String
-  page    Page?  @relation("Page_path")
+model Page {
+  id               String  @id @default(cuid())
+  title            String  @unique @default("")
+  path             String  @default("")
+  slug             String  @default("")
+  description      String  @default("")
+  parent           Page?   @relation("Page_parent", fields: [parentId], references: [id])
+  parentId         String? @map("parent")
+  blocks           String? @default("[{\"type\":\"Example\",\"props\":{}}]")
+  isHome           Boolean @default(false)
+  from_Page_parent Page[]  @relation("Page_parent")
+
+  @@index([path])
+  @@index([slug])
+  @@index([parentId])
 }
 
-model Page {
-  id          String  @id @default(cuid())
-  title       String  @unique @default("")
-  path        Route?  @relation("Page_path", fields: [pathId], references: [id])
-  pathId      String? @unique @map("path")
-  description String  @default("")
-  blocks      String? @default("[{\"type\":\"Example\",\"props\":{}}]")
+model Meta {
+  id       String  @id @default(cuid())
+  key      String  @unique @default("")
+  autoload Boolean @default(true)
+  data     String? @default("{}")
 }

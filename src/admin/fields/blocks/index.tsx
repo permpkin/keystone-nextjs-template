@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FieldProps } from '@keystone-6/core/types';
 import { Button } from '@keystone-ui/button';
 import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
-import { XIcon, PlusIcon, ChevronDownIcon, ChevronUpIcon } from '@keystone-ui/icons';
+import { XIcon, PlusIcon, ChevronDownIcon, ChevronUpIcon, EditIcon } from '@keystone-ui/icons';
 import { controller } from '@keystone-6/core/fields/types/json/views';
-import dynamic from 'next/dynamic'
 
 import { style } from './style';
-import { BlockSelector } from '../../../admin/components/BlockSelector';
+import { BlockSelector } from '../../components/BlockSelector';
+import { Drawer, DrawerController } from '@keystone-ui/modals';
 
 interface BlockItem {
   type: string;
@@ -15,6 +15,8 @@ interface BlockItem {
 }
 
 export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof controller>) => {
+
+  const [showEditor, setShowEditor] = useState<boolean>(false)
 
   const items: BlockItem[] = value ? JSON.parse(value) : [];
 
@@ -51,11 +53,16 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
     }
   }
 
+  const editBlock = (index: number) => {
+    //
+  }
+
   return (
     <FieldContainer>
       <FieldLabel>{field.label}</FieldLabel>
       <ul className={style.list.ul}>
         {items.map((item: BlockItem, i: number) => {
+          
           if (item.type === "BlockSelector") {
             return (
               <div key={`related-link-${i}`} className={style.list.li}>
@@ -65,13 +72,9 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
               </div>
             )
           }
-          const Block = dynamic(
-            () => import(`../../../blocks/${item.type}/`),
-            {
-              loading: () => <p>...</p>,
-              ssr: true
-            }
-          )
+          
+          const { View } = require(`../../../blocks/${item.type}/`)
+          
           return (
             <div key={`related-link-${i}`} className={style.list.li}>
               <div className={style.actions.wrapper}>
@@ -81,6 +84,15 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
                   onClick={() => moveBlock(i, 'up')}
                 >
                   <ChevronUpIcon
+                    size="small"
+                  />
+                </Button>
+                <Button
+                  size="small"
+                  className={style.actions.option}
+                  onClick={() => editBlock(i)}
+                >
+                  <EditIcon
                     size="small"
                   />
                 </Button>
@@ -103,7 +115,7 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
                   />
                 </Button>
               </div>
-              <Block {...item.props}/>
+              <View {...item.props}/>
             </div>
           );
         })}
@@ -111,7 +123,7 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
       <Button
         size="small"
         className={style.actions.row}
-        onClick={addBlock}
+        onClick={() => setShowEditor(true)}
         aria-label="Add Block"
       >
         <PlusIcon
@@ -119,6 +131,24 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
         />
         Add Block
       </Button>
+      <DrawerController isOpen={showEditor}>
+        <Drawer
+          title={`Edit Block`}
+          width="narrow"
+          actions={{
+            confirm: {
+              label: 'Go',
+              action: () => {},
+            },
+            cancel: {
+              label: 'Cancel',
+              action: () => setShowEditor(false),
+            },
+          }}
+        >
+          blablabla
+        </Drawer>
+      </DrawerController>
     </FieldContainer>
   );
 };
