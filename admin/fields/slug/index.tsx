@@ -7,8 +7,8 @@ import { useToasts } from '@keystone-ui/toast';
 
 import { style } from './style';
 import Link from 'next/link';
-import { toSlug } from '../../../utils/toSlug';
-import config from '../../../../config'
+import { toSlug } from '../../../src/utils/toSlug';
+import config from '../../../config'
 import { useRouter } from 'next/router';
 
 export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof controller>) => {

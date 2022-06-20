@@ -73,7 +73,7 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
             )
           }
           
-          const { View } = require(`../../../blocks/${item.type}/`)
+          const { View } = require(`../../../src/blocks/${item.type}/`)
           
           return (
             <div key={`related-link-${i}`} className={style.list.li}>

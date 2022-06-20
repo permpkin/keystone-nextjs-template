@@ -13,14 +13,14 @@ export const Page = list({
       isIndexed: 'unique',
       validation: { isRequired: true },
       ui: {
-        views: require.resolve('../admin/fields/title/index.tsx')
+        views: require.resolve('../../admin/fields/title/index.tsx')
       }
     }),
     path: text({
       defaultValue: '',
       isIndexed: true,
       ui: {
-        views: require.resolve('../admin/fields/path/index.tsx'),
+        views: require.resolve('../../admin/fields/path/index.tsx'),
         itemView: {
           fieldMode: 'hidden'
         },
@@ -33,7 +33,7 @@ export const Page = list({
       isIndexed: true,
       isOrderable: false,
       ui: {
-        views: require.resolve('../admin/fields/slug/index.tsx'),
+        views: require.resolve('../../admin/fields/slug/index.tsx'),
         listView: {
           fieldMode: 'hidden'
         },
@@ -57,7 +57,7 @@ export const Page = list({
       isFilterable: false,
       isOrderable: false,
       ui: {
-        views: require.resolve('../admin/fields/blocks/index.tsx'),
+        views: require.resolve('../../admin/fields/blocks/index.tsx'),
         listView: {
           fieldMode: 'hidden'
         },

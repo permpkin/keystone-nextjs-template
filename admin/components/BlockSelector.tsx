@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { EnabledBlocks } from "../../blocks/enabled";
+import { EnabledBlocks } from "../../src/blocks/enabled";
 
 export const style = {
   wrapper: css`

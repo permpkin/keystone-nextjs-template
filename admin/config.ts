@@ -1,6 +1,6 @@
-import CustomLogo from '../src/admin/components/CustomLogo';
+import CustomLogo from './components/CustomLogo';
 import { AdminConfig } from '@keystone-6/core/types';
-import { Navigation } from '../src/admin/components/Navigation';
+import { Navigation } from './components/Navigation';
 
 export const components: AdminConfig['components'] = {
   Navigation: Navigation,

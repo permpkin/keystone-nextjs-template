@@ -3,8 +3,8 @@ import { Heading, Stack } from '@keystone-ui/core';
 
 import { css } from '@emotion/css';
 
-import HomeSelect from '../../../src/admin/components/HomeSelect';
-import MenuBuilder from '../../../src/admin/components/MenuBuilder';
+import HomeSelect from '../../components/HomeSelect';
+import MenuBuilder from '../../components/MenuBuilder';
 
 export const style = {
   wrapper: css`
