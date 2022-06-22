@@ -61,5 +61,15 @@ export const style = {
       justify-content: flex-start;
       border-radius: 0;
     `
+  },
+  editor: {
+    wrapper: css`
+      padding: 12px;
+      background-color: #f0f0f0;
+      border: 2px solid #ccc;
+      margin-top: 24px;
+    `,
+    fields: css`
+    `
   }
 };

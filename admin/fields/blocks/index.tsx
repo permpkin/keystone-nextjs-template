@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
 import { FieldProps } from '@keystone-6/core/types';
 import { Button } from '@keystone-ui/button';
-import { FieldContainer, FieldLabel } from '@keystone-ui/fields';
+import { FieldContainer, FieldLabel, TextInput, TextArea } from '@keystone-ui/fields';
 import { XIcon, PlusIcon, ChevronDownIcon, ChevronUpIcon, EditIcon } from '@keystone-ui/icons';
 import { controller } from '@keystone-6/core/fields/types/json/views';
 
@@ -14,9 +14,51 @@ interface BlockItem {
   props?: any;
 }
 
+const BlockEditorWrapper = ({ data, schema, onChange, children }:{
+  data: any,
+  schema: any,
+  onChange: Function,
+  children?: ReactNode
+}) => {
+  return (
+    <div>
+      <div className={style.editor.wrapper}>
+        {children}
+      </div>
+      <div className={style.editor.fields}>
+        {
+          Object.keys(schema).map((key) => {
+            switch (schema[key]) {
+              case 'text':
+                return (
+                  <FieldContainer key={key}>
+                    <FieldLabel>{key}</FieldLabel>
+                    <TextInput value={data[key]} onChange={(e)=>{console.log(e)}}/>
+                  </FieldContainer>
+                )
+              case 'textarea':
+                return (
+                  <FieldContainer key={key}>
+                    <FieldLabel>{key}</FieldLabel>
+                    <TextArea size="large" value={data[key]} onChange={(e)=>{console.log(e)}}/>
+                  </FieldContainer>
+                )
+              default:
+                return (
+                  <div key={key}>unsupported field type ({schema[key]}).</div>
+                )
+            }
+          })
+        }
+      </div>
+    </div>
+  )
+}
+
 export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof controller>) => {
 
   const [showEditor, setShowEditor] = useState<boolean>(false)
+  const [BlockEditorContext, setBlockEditorContext] = useState<any|null>(null)
 
   const items: BlockItem[] = value ? JSON.parse(value) : [];
 
@@ -53,8 +95,36 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
     }
   }
 
-  const editBlock = (index: number) => {
-    //
+  const BlockEditor: any = useMemo(() => {
+
+    if (BlockEditorContext === null) return null;
+
+    return () => {
+      return (
+        <BlockEditorWrapper
+          data={BlockEditorContext.item}
+          schema={BlockEditorContext.schema}
+          onChange={()=>{
+            //BlockEditorContext.index
+            //Update here?
+            console.log("CHANGE_HAPPEND")
+          }}
+        >
+          <BlockEditorContext.View/>
+        </BlockEditorWrapper>
+      )
+    }
+
+  }, [BlockEditorContext])
+
+  const editBlock = (index: number, item: any, BlockView: ReactNode, schema: any) => {
+    setBlockEditorContext({
+      index,
+      item,
+      View: BlockView,
+      schema
+    })
+    setShowEditor(true)
   }
 
   return (
@@ -73,7 +143,7 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
             )
           }
           
-          const { View } = require(`../../../src/blocks/${item.type}/`)
+          const { View, Schema } = require(`../../../src/blocks/${item.type}/`)
           
           return (
             <div key={`related-link-${i}`} className={style.list.li}>
@@ -90,7 +160,9 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
                 <Button
                   size="small"
                   className={style.actions.option}
-                  onClick={() => editBlock(i)}
+                  onClick={() => {
+                    editBlock(i, item, View, Schema)
+                  }}
                 >
                   <EditIcon
                     size="small"
@@ -134,10 +206,10 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
       <DrawerController isOpen={showEditor}>
         <Drawer
           title={`Edit Block`}
-          width="narrow"
+          width="wide"
           actions={{
             confirm: {
-              label: 'Go',
+              label: 'Save changes',
               action: () => {},
             },
             cancel: {
@@ -146,7 +218,7 @@ export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof c
             },
           }}
         >
-          blablabla
+          { BlockEditor && <BlockEditor/> }
         </Drawer>
       </DrawerController>
     </FieldContainer>

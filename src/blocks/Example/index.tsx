@@ -1,5 +1,10 @@
 import { style } from './style';
 
+export const Schema = {
+  title: 'text',
+  content: 'text'
+}
+
 export const View = ({ title, content }:{ title?: string, content?: string }) => {
   return (
       <div className={style.wrapper}>
