@@ -22,18 +22,15 @@ export default withAuth(
       generateNextGraphqlAPI: true,
       generateNodeAPI: true,
     },
-    files: {
-      upload: 'local',
+    storage: {
       local: {
-        storagePath: 'public/files',
-        baseUrl: '/files',
-      },
-    },
-    images: {
-      upload: 'local',
-      local: {
-        storagePath: 'public/files',
-        baseUrl: '/files',
+        kind: 'local',
+        type: 'image',
+        generateUrl: path => `http://localhost:3000/images${path}`,
+        serverRoute: {
+          path: '/images',
+        },
+        storagePath: 'public/images',
       },
     },
     lists,
