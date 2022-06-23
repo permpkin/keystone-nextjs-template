@@ -7,7 +7,9 @@ import {
 
 export const Image = list({
   fields: {
-    image: image(),
+    image: image({
+      storage: 'local'
+    }),
     description: text({
       isIndexed: 'unique',
       validation: { isRequired: true }
