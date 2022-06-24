@@ -100,8 +100,12 @@ type Page {
   slug: String
   description: String
   parent: Page
-  blocks: JSON
+  document: Page_document_Document
   isHome: Boolean
+}
+
+type Page_document_Document {
+  document(hydrateRelationships: Boolean! = false): JSON!
 }
 
 input PageWhereUniqueInput {
@@ -140,7 +144,7 @@ input PageUpdateInput {
   slug: String
   description: String
   parent: PageRelateToOneForUpdateInput
-  blocks: JSON
+  document: JSON
   isHome: Boolean
 }
 
@@ -161,7 +165,7 @@ input PageCreateInput {
   slug: String
   description: String
   parent: PageRelateToOneForCreateInput
-  blocks: JSON
+  document: JSON
   isHome: Boolean
 }
 
@@ -221,13 +225,12 @@ type Image {
   meta: JSON
 }
 
-interface ImageFieldOutput {
+type ImageFieldOutput {
   id: ID!
   filesize: Int!
   width: Int!
   height: Int!
   extension: ImageExtension!
-  ref: String!
   url: String!
 }
 
@@ -241,26 +244,6 @@ enum ImageExtension {
 input ImageWhereUniqueInput {
   id: ID
   description: String
-}
-
-type LocalImageFieldOutput implements ImageFieldOutput {
-  id: ID!
-  filesize: Int!
-  width: Int!
-  height: Int!
-  extension: ImageExtension!
-  ref: String!
-  url: String!
-}
-
-type CloudImageFieldOutput implements ImageFieldOutput {
-  id: ID!
-  filesize: Int!
-  width: Int!
-  height: Int!
-  extension: ImageExtension!
-  ref: String!
-  url: String!
 }
 
 input ImageWhereInput {
@@ -283,8 +266,7 @@ input ImageUpdateInput {
 }
 
 input ImageFieldInput {
-  upload: Upload
-  ref: String
+  upload: Upload!
 }
 
 """

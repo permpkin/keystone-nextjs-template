@@ -26,7 +26,7 @@ model Page {
   description      String  @default("")
   parent           Page?   @relation("Page_parent", fields: [parentId], references: [id])
   parentId         String? @map("parent")
-  blocks           String? @default("[{\"type\":\"Example\",\"props\":{}}]")
+  document         String  @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   isHome           Boolean @default(false)
   from_Page_parent Page[]  @relation("Page_parent")
 
@@ -48,7 +48,6 @@ model Image {
   image_extension String?
   image_width     Int?
   image_height    Int?
-  image_mode      String?
   image_id        String?
   description     String  @unique @default("")
   meta            String? @default("{}")

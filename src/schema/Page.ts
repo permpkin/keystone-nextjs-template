@@ -6,10 +6,13 @@ import {
   json,
   checkbox
 } from '@keystone-6/core/fields';
+import { document } from '@keystone-6/fields-document';
+
+import { componentBlocks } from '../blocks/componentBlocks'
 
 export const Page = list({
   fields: {
-    title: text({  
+    title: text({
       isIndexed: 'unique',
       validation: { isRequired: true },
       ui: {
@@ -53,21 +56,38 @@ export const Page = list({
         hideCreate: true
       }
     }),
-    blocks: json({
-      isFilterable: false,
-      isOrderable: false,
-      ui: {
-        views: require.resolve('../../admin/fields/blocks/index.tsx'),
-        listView: {
-          fieldMode: 'hidden'
-        },
-        createView: {
-          fieldMode: 'hidden'
-        }
-      },
-      defaultValue: [
-        { type: 'Example', props: {} }
-      ]
+    document: document({
+      ui: { views: require.resolve('../blocks/componentBlocks.tsx') },
+      componentBlocks,
+      // formatting: {
+      //   inlineMarks: {
+      //     bold: true,
+      //     italic: true,
+      //     underline: true,
+      //     strikethrough: true,
+      //     code: true,
+      //     superscript: true,
+      //     subscript: true,
+      //     keyboard: true,
+      //   },
+      //   listTypes: {
+      //     ordered: true,
+      //     unordered: true,
+      //   },
+      //   alignment: {
+      //     center: true,
+      //     end: true,
+      //   },
+      //   headingLevels: [1, 2, 3, 4, 5, 6],
+      //   blockTypes: {
+      //     blockquote: true,
+      //     code: true
+      //   },
+      //   softBreaks: true,
+      // },
+      links: true,
+      dividers: true,
+      // layouts: [/* ... */],
     }),
     isHome: checkbox({
       defaultValue: false,
