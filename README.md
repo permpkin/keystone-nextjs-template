@@ -10,12 +10,17 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the home page.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Open [http://localhost:8000](http://localhost:8000) with your browser to see keystone.
 
 ## Blocks
 
 Create blocks in `/src/blocks/`, Ensure you add the block to `/src/blocks/enabled.ts` to add them to the available blocks in the editor.
 
-## Notes
+All blocks need to export both a `View` and a `Schema` to work correctly (see "Example Block"). Currently only text/textarea are supported field types.
 
-change `[...path].tsx` to `[[...path]].tsx` and remove `index.tsx` to use the global page renderer? ( should this be default?)
+## Admin
+
+Custom Logo/Navigation are in `/admin/components`.
+Custom fields are in `/admin/fields`, Currently slug/path/blocks are in use and are tied primarily to the `Page` type.
+
+There is also a branch called `DocumentRenderer` with a similar attempt at implementing the current `Blocks` approach into the SlateJS editor per Keystone reccomendations, It does work though it's not ideal.
