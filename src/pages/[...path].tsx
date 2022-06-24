@@ -18,15 +18,12 @@ const PathMatch: NextPage<BlockLayoutProps> = ({
   description,
   document
 }) => {
-  console.log(document)
   return (
     <PageBlocksLayout {...{ title, description, document }}/>
   )
 }
 
 export const getStaticProps: GetStaticProps = async (context: any) => {
-
-  console.log('path_match', `/${context.params?.path?.join('/')||''}`)
 
   const [page] = await query.Page.findMany({
     where: {
@@ -37,8 +34,6 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
     take: 1,
     query: `title description document { document } path`
   });
-
-  console.log(page)
   
   return {
     props: {

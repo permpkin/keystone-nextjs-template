@@ -59,6 +59,13 @@ export const Page = list({
     document: document({
       ui: { views: require.resolve('../blocks/componentBlocks.tsx') },
       componentBlocks,
+      layouts: [
+        [1, 1],
+        [1, 1, 1],
+        [2, 1],
+        [1, 2],
+        [1, 2, 1],
+      ],
       // formatting: {
       //   inlineMarks: {
       //     bold: true,
