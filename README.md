@@ -1,3 +1,9 @@
+# Keystone + NextJS Boilerplate
+
+Ready to go Keystone + NextJS Boilerplate.
+
+Build a website using React "Blocks" with OOB Pages/Route handler.
+
 ## Getting Started
 
 First, run the development server:
