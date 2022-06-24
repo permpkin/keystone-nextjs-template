@@ -2,6 +2,7 @@
 /** @jsx jsx */
 
 import { Box, jsx } from '@keystone-ui/core';
+import Image from 'next/image';
 
 export default ({ items }: any) => {
   return (
@@ -28,9 +29,11 @@ export default ({ items }: any) => {
               background: '#eff3f6',
             }}
           >
-            <img
+            <Image
               role="presentation"
-              src={image?.value}
+              src={image}
+              width={640}
+              height={480}
               css={{
                 objectFit: 'cover',
                 objectPosition: 'center center',
@@ -53,7 +56,6 @@ export default ({ items }: any) => {
           </Box>
         );
       })}
-      {/* { props.fields.attribution.element} */}
     </div>
   );
 }

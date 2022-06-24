@@ -2,7 +2,7 @@ import { component, fields } from '@keystone-6/fields-document/component-blocks'
 import editor from './editor';
 
 export default component({
-  // chromeless: true,
+  chromeless: true,
   label: 'Carousel',
   preview: editor,
   schema: {
