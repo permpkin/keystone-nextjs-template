@@ -13,7 +13,6 @@ import { useRouter } from 'next/router';
 
 export const Field = ({ field, value, onChange, autoFocus }: FieldProps<typeof controller>) => {
 
-  // TODO: find a better way to get current document.
   const { query } = useRouter()
 
   const { addToast } = useToasts();

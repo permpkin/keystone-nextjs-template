@@ -1,22 +1,26 @@
-// import { GetStaticProps } from "next";
-
-// import { query } from '.keystone/api';
-import { GetServerSideProps } from 'next';
-
+import Link from "next/link"
+import { useRouter } from "next/router"
 import style from "./style.module.scss"
 
-export default function Header({ routes }:{ routes?: { path: string }[] }) {
+export default function Header({ pages }:{ pages?: { title: string, path: string }[] }) {
+
+  const { asPath } = useRouter()
 
   return (
     <header className={style.header}>
-      HEADER_MENU
+      HEADER
       <nav>
+        NAV_MENU
         <ul>
           {
-            routes && routes.map((route: any, index: number) => {
+            pages && pages.map((page: any, index: number) => {
               return (
                 <li key={`menu-${index}`}>
-                  <a href={route.path}>{route.path}</a>
+                  <Link href={page.path||"/"}>
+                    <a>
+                      {`${page.title}${asPath===`/${page.path}`?'(this page)':''}`}
+                    </a>
+                  </Link>
                 </li>
               )
             })
@@ -25,18 +29,4 @@ export default function Header({ routes }:{ routes?: { path: string }[] }) {
       </nav>
     </header>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (context: any) => {
-
-  // const routes = await query.Page.findMany({
-  //   query: `title path { prefix path }`
-  // });
-
-  return {
-    props: {
-      routes: []
-    }
-  }
-
 }
