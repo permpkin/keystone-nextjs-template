@@ -26,12 +26,17 @@ export const getStaticProps: GetStaticProps = async () => {
   if (!page) return {
     notFound: true
   }
+
+  const pages = await query.Page.findMany({
+    query: 'title path'
+  });
   
   return {
     props: {
       title: `${config.SITE_TITLE}${page.title!=undefined?` | ${page.title}`:''}`,
       description: page.description,
-      blocks: page.blocks
+      blocks: page.blocks,
+      pages
     }
   }
 

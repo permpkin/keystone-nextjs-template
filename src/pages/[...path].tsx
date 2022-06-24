@@ -14,18 +14,17 @@ import { query } from '.keystone/api'
 import config from '../../config'
 
 const PathMatch: NextPage<BlockLayoutProps> = ({
+  pages,
   title,
   description,
   blocks
 }) => {
   return (
-    <PageBlocksLayout {...{ title, description, blocks }}/>
+    <PageBlocksLayout {...{ pages, title, description, blocks }}/>
   )
 }
 
 export const getStaticProps: GetStaticProps = async (context: any) => {
-
-  console.log('path_match', `/${context.params?.path?.join('/')||''}`)
 
   const [page] = await query.Page.findMany({
     where: {
@@ -36,12 +35,17 @@ export const getStaticProps: GetStaticProps = async (context: any) => {
     take: 1,
     query: `title description blocks path`
   });
+
+  const pages = await query.Page.findMany({
+    query: 'title path'
+  });
   
   return {
     props: {
       title: `${config.SITE_TITLE}${page?.title!=undefined?` | ${page.title}`:''}`,
       description: page?.description || '',
-      blocks: page?.blocks || []
+      blocks: page?.blocks || [],
+      pages
     }
   }
 
