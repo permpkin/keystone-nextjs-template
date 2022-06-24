@@ -221,13 +221,12 @@ type Image {
   meta: JSON
 }
 
-interface ImageFieldOutput {
+type ImageFieldOutput {
   id: ID!
   filesize: Int!
   width: Int!
   height: Int!
   extension: ImageExtension!
-  ref: String!
   url: String!
 }
 
@@ -241,26 +240,6 @@ enum ImageExtension {
 input ImageWhereUniqueInput {
   id: ID
   description: String
-}
-
-type LocalImageFieldOutput implements ImageFieldOutput {
-  id: ID!
-  filesize: Int!
-  width: Int!
-  height: Int!
-  extension: ImageExtension!
-  ref: String!
-  url: String!
-}
-
-type CloudImageFieldOutput implements ImageFieldOutput {
-  id: ID!
-  filesize: Int!
-  width: Int!
-  height: Int!
-  extension: ImageExtension!
-  ref: String!
-  url: String!
 }
 
 input ImageWhereInput {
@@ -283,8 +262,7 @@ input ImageUpdateInput {
 }
 
 input ImageFieldInput {
-  upload: Upload
-  ref: String
+  upload: Upload!
 }
 
 """
@@ -301,6 +279,106 @@ input ImageCreateInput {
   image: ImageFieldInput
   description: String
   meta: JSON
+}
+
+type Product {
+  id: ID!
+  title: String
+  price: Float
+  description: String
+  variations(
+    where: ProductWhereInput! = {}
+    orderBy: [ProductOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Product!]
+  variationsCount(where: ProductWhereInput! = {}): Int
+  variationOf: Product
+}
+
+input ProductWhereUniqueInput {
+  id: ID
+  title: String
+}
+
+input ProductWhereInput {
+  AND: [ProductWhereInput!]
+  OR: [ProductWhereInput!]
+  NOT: [ProductWhereInput!]
+  id: IDFilter
+  title: StringFilter
+  price: FloatNullableFilter
+  description: StringFilter
+  variations: ProductManyRelationFilter
+  variationOf: ProductWhereInput
+}
+
+input FloatNullableFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatNullableFilter
+}
+
+input ProductManyRelationFilter {
+  every: ProductWhereInput
+  some: ProductWhereInput
+  none: ProductWhereInput
+}
+
+input ProductOrderByInput {
+  id: OrderDirection
+  title: OrderDirection
+  price: OrderDirection
+  description: OrderDirection
+}
+
+input ProductUpdateInput {
+  title: String
+  price: Float
+  description: String
+  variations: ProductRelateToManyForUpdateInput
+  variationOf: ProductRelateToOneForUpdateInput
+}
+
+input ProductRelateToManyForUpdateInput {
+  disconnect: [ProductWhereUniqueInput!]
+  set: [ProductWhereUniqueInput!]
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input ProductRelateToOneForUpdateInput {
+  create: ProductCreateInput
+  connect: ProductWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ProductUpdateArgs {
+  where: ProductWhereUniqueInput!
+  data: ProductUpdateInput!
+}
+
+input ProductCreateInput {
+  title: String
+  price: Float
+  description: String
+  variations: ProductRelateToManyForCreateInput
+  variationOf: ProductRelateToOneForCreateInput
+}
+
+input ProductRelateToManyForCreateInput {
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input ProductRelateToOneForCreateInput {
+  create: ProductCreateInput
+  connect: ProductWhereUniqueInput
 }
 
 """
@@ -336,6 +414,15 @@ type Mutation {
   updateImages(data: [ImageUpdateArgs!]!): [Image]
   deleteImage(where: ImageWhereUniqueInput!): Image
   deleteImages(where: [ImageWhereUniqueInput!]!): [Image]
+  createProduct(data: ProductCreateInput!): Product
+  createProducts(data: [ProductCreateInput!]!): [Product]
+  updateProduct(
+    where: ProductWhereUniqueInput!
+    data: ProductUpdateInput!
+  ): Product
+  updateProducts(data: [ProductUpdateArgs!]!): [Product]
+  deleteProduct(where: ProductWhereUniqueInput!): Product
+  deleteProducts(where: [ProductWhereUniqueInput!]!): [Product]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -398,6 +485,14 @@ type Query {
   ): [Image!]
   image(where: ImageWhereUniqueInput!): Image
   imagesCount(where: ImageWhereInput! = {}): Int
+  products(
+    where: ProductWhereInput! = {}
+    orderBy: [ProductOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Product!]
+  product(where: ProductWhereUniqueInput!): Product
+  productsCount(where: ProductWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

@@ -48,8 +48,19 @@ model Image {
   image_extension String?
   image_width     Int?
   image_height    Int?
-  image_mode      String?
   image_id        String?
   description     String  @unique @default("")
   meta            String? @default("{}")
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  title         String    @unique @default("")
+  price         Float?
+  description   String    @default("")
+  variations    Product[] @relation("Product_variationOf")
+  variationOf   Product?  @relation("Product_variationOf", fields: [variationOfId], references: [id])
+  variationOfId String?   @map("variationOf")
+
+  @@index([variationOfId])
 }
